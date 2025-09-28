@@ -25,7 +25,7 @@ export default class Customer {
 
   /**
    * сохранение данных в модели
-   * @param {TField[] | TField} fields пара тип поля TFieldType и значение поля
+   * @param {TField[] | TField} fields объект, содержащий свойства: тип поля TFieldType и значение поля или массив таких объектов
    */
   setData(fields: TField[] | TField): void {
     if (Array.isArray(fields)) {
@@ -47,7 +47,7 @@ export default class Customer {
 
   /**
    * валидация данных
-   * @param {TField} field пара тип поля TFieldType и значение поля
+   * @param {TField} field объект, содержащий свойства: тип поля TFieldType и значение поля
    */
   validateData(field: TField): string {
     if (!field.value) {
@@ -68,7 +68,7 @@ export default class Customer {
 
   /**
    * присваивает значение в поле
-   * @param {TField} field пара тип поля TFieldType и значение поля
+   * @param {TField} field объект, содержащий свойства: тип поля TFieldType и значение поля
    */
   private setValue(field: TField): void {
     const type = field.type;

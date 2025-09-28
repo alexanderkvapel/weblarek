@@ -17,11 +17,11 @@ export default class Cart {
   }
 
   /**
-   * удаление товара, полученного в параметре из массива корзины
-   * @param {IProduct} item объект товара
+   * удаление товара по его id, полученного в параметре из массива корзины.
+   * @param {string} id идентификатор товара
    */
-  deleteItem(item: IProduct): void {
-    const itemToDelete = this.findItem(item);
+  deleteItem(id: string): void {
+    const itemToDelete = this.findItem(id);
 
     if (itemToDelete) {
       const indexOfItemToDelete = this.items.indexOf(itemToDelete);
@@ -63,10 +63,10 @@ export default class Cart {
 
   /**
    * проверка наличия товара в корзине по его id, полученного в параметр метода
-   * @param {IProduct} item объект товара
+   * @param {string} id идентификатор товара
    */
-  isItemInCart(item: IProduct): boolean {
-    return this.findItem(item) ? true : false;
+  isItemInCart(id: string): boolean {
+    return this.findItem(id) ? true : false;
   }
 
   /**
@@ -78,9 +78,9 @@ export default class Cart {
 
   /**
    * поиск товара в items
-   * @param {IProduct} item объект товара
+   * @param {string} id идентификатор товара
    */
-  private findItem(item: IProduct): IProduct | undefined {
-    return this.items.find(currentItem => currentItem.id === item.id);
+  private findItem(id: string): IProduct | undefined {
+    return this.items.find(item => item.id === id);
   }
 }
