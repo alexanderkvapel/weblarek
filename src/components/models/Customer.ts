@@ -14,7 +14,7 @@ export default class Customer {
   /**
    * получение всех данных покупателя
    */
-  getDate() : ICustomer {
+  getData() : ICustomer {
     return {
       payment: this.payment,
       address: this.address,
