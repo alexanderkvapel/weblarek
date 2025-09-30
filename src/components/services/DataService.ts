@@ -1,12 +1,10 @@
 import { IApi, IProduct, IProductResponse, IOrderRequest, IOrderResponse } from '../../types/index.ts';
-import { Api } from '../base/Api.ts';
-import { API_URL } from '../../utils/constants.ts';
 
 export default class DataService {
   private api: IApi;
 
-  constructor() {
-    this.api = new Api(API_URL);
+  constructor(api: IApi) {
+    this.api = api;
   }
 
   /**
@@ -31,10 +29,10 @@ export default class DataService {
 
   /**
    * отправляет на сервер данные о покупателе и выбранных товарах.
-   * @param items массив товаров к покупке 
+   * @param {IOrderRequest} items массив товаров к покупке 
    * @returns {Promise<IPostResponse>} 
    */
-  async postOrder(items: IProduct[]): Promise<IOrderResponse> {
+  async postOrder(items: IOrderRequest): Promise<IOrderResponse> {
     try {
       const orderResponse: IOrderResponse = await this.api.post('/order/', items);
 

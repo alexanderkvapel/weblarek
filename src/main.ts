@@ -1,14 +1,20 @@
 import './scss/styles.scss';
 
+import { apiProducts } from './utils/data.ts';
+
+import { Api } from './components/base/Api.ts';
 import Products from './components/models/Products.ts';
 import Cart from './components/models/Cart.ts';
 import Customer from './components/models/Customer.ts';
 import DataService from './components/services/DataService.ts';
-import { IProduct, TField } from './types/index.ts';
+
+import { IProduct } from './types/index.ts';
+import { API_URL } from './utils/constants.ts';
 
 
 // создаем сервис для коммуникации с сервером
-const dataService = new DataService();
+const api = new Api(API_URL);
+const dataService = new DataService(api);
 
 // создаем экземпляры моделей
 const productsModel = new Products();
@@ -19,6 +25,7 @@ const customerModel = new Customer();
 // Временные функции для тестирования функционала
 /**
  * Вывод информации из корзины
+ * @param {Cart} cart экземпляр модели корзины
  */
 function logCartStatus(cart: Cart): void {
   console.log('\tКол-во товаров в корзине:', cart.getItemsCount());
@@ -26,40 +33,45 @@ function logCartStatus(cart: Cart): void {
   console.log('\tТовары в корзине:', cart.getItems());
 }
 
+/**
+ * 
+ * @param cart экземпляр модели корзины
+ * @param item добавляемый товар
+ */
 function addToCart(cart: Cart, item: IProduct | null): void {
   if (item) cart.addItem(item);
 }
 
-function validateCustomerData(customer: Customer, customerData: TField[]): void {
-  console.log('\tОшибки валидации оплаты:', customer.validateData(customerData[0]) || 'Ошибок нет');
-  console.log('\tОшибки валидации адреса:', customer.validateData(customerData[1]) || 'Ошибок нет');
-  console.log('\tОшибки валидации емэйла:', customer.validateData(customerData[2]) || 'Ошибок нет');
-  console.log('\tОшибки валидации номера телефона:', customer.validateData(customerData[3]) || 'Ошибок нет');
+/**
+ * Вывод информации из корзины
+ * @param {Customer} customer экземпляр модели корзины
+ */
+function logCustomerStatus(customer: Customer): void {
+  console.log('\tДанные покупателя:', customer.getData());
+  console.log('\tОшибки валидации:', customer.validateData());
 }
 
 
 // Тестирование функционала
-// получаем товары с сервера
-const items = await dataService.getProducts();
 // сохраняем товары в модель каталога
-productsModel.setItems(items);
+productsModel.setItems(apiProducts.items);
 console.log('Массив товаров из каталога:', productsModel.getItems());
 
-// Находим товар с id='90973ae5-285c-4b6f-a6d0-65d1d760b102'
-let someItem = productsModel.getItemById('90973ae5-285c-4b6f-a6d0-65d1d760b102');
-console.log('Товар с id=\"90973ae5-285c-4b6f-a6d0-65d1d760b102\":', someItem);
+// Находим товар с id='c101ab44-ed99-4a54-990d-47aa2bb4e7d9'
+const someItem = productsModel.getItemById('c101ab44-ed99-4a54-990d-47aa2bb4e7d9');
+console.log('Товар с id=\"c101ab44-ed99-4a54-990d-47aa2bb4e7d9\":', someItem);
 
 // сохраняем товар с id='412bcf81-7e75-4e70-bdb9-d3c73c9803b7' для подробного отображения
 productsModel.setSelectedItem('412bcf81-7e75-4e70-bdb9-d3c73c9803b7');
-let selectedItem = productsModel.getSelectedItem();
+const selectedItem = productsModel.getSelectedItem();
 console.log('Выбранный товар для подробного отображения:', selectedItem);
 
 
-// Добавляем товар с id='90973ae5-285c-4b6f-a6d0-65d1d760b102' в корзину:
-console.log('Добавляем товар с id=\"90973ae5-285c-4b6f-a6d0-65d1d760b102\" в корзину');
+// Добавляем товар с id='c101ab44-ed99-4a54-990d-47aa2bb4e7d9' в корзину:
+console.log('Добавляем товар с id=\"c101ab44-ed99-4a54-990d-47aa2bb4e7d9\" в корзину');
 addToCart(cartModel, someItem);
 logCartStatus(cartModel);
-console.log('\tТовар с id=\"90973ae5-285c-4b6f-a6d0-65d1d760b102\" в наличии?:', cartModel.isItemInCart('90973ae5-285c-4b6f-a6d0-65d1d760b102'));
+console.log('\tТовар с id=\"c101ab44-ed99-4a54-990d-47aa2bb4e7d9\" в наличии?:', cartModel.isItemInCart('c101ab44-ed99-4a54-990d-47aa2bb4e7d9'));
 
 // Добавляем выбранный товар для подробного отображения в корзину
 console.log('Добавляем выбранный товар для подробного отображения в корзину');
@@ -67,62 +79,46 @@ addToCart(cartModel, selectedItem);
 logCartStatus(cartModel);
 console.log('\tВыбранный товар для отображения в наличии?:', cartModel.isItemInCart('412bcf81-7e75-4e70-bdb9-d3c73c9803b7'));
 
-// Удаляем товар с id='90973ae5-285c-4b6f-a6d0-65d1d760b102' из корзины:
-console.log('Удаляем товар с id=\"90973ae5-285c-4b6f-a6d0-65d1d760b102\" из корзины');
-cartModel.deleteItem('90973ae5-285c-4b6f-a6d0-65d1d760b102');
+// // Удаляем товар с id='c101ab44-ed99-4a54-990d-47aa2bb4e7d9' из корзины:
+console.log('Удаляем товар с id=\"c101ab44-ed99-4a54-990d-47aa2bb4e7d9\" из корзины');
+cartModel.deleteItem('c101ab44-ed99-4a54-990d-47aa2bb4e7d9');
 logCartStatus(cartModel);
-console.log('\tТовар с id=\"90973ae5-285c-4b6f-a6d0-65d1d760b102\" в наличии?:', cartModel.isItemInCart('90973ae5-285c-4b6f-a6d0-65d1d760b102'));
+console.log('\tТовар с id=\"c101ab44-ed99-4a54-990d-47aa2bb4e7d9\" в наличии?:', cartModel.isItemInCart('c101ab44-ed99-4a54-990d-47aa2bb4e7d9'));
 
 // Очищаем корзину
 console.log('Очищаем корзину');
 cartModel.clearItems();
 logCartStatus(cartModel);
 
-// Данные покупателя:
-const customerData: TField[] = [
-  {
-    type: 'PAYMENT',
-    value: ''
-  },
-  {
-    type: 'ADDRESS',
-    value: ''
-  },
-  {
-    type: 'EMAIL',
-    value: ''
-  },
-  {
-    type: 'PHONE',
-    value: ''
-  },
-]
+
+console.log('Ошибки валидации:', customerModel.validateData());
 // Записываем в данные покупателя способ оплаты:
 console.log('Устанавливаем тип оплаты')
-customerData[0].value = 'CASH';
-customerModel.setData(customerData[0]);
-validateCustomerData(customerModel, customerData);
-console.log('Данные покупателя:', customerModel.getData());
+customerModel.setData({ payment: 'CASH' });
+logCustomerStatus(customerModel);
 
 console.log('Устанавливаем адрес')
-customerData[1].value = 'г. Москва, Кутузовский пр-кт, д. 32';
-customerModel.setData(customerData[1]);
-validateCustomerData(customerModel, customerData);
-console.log('Данные покупателя:', customerModel.getData());
+customerModel.setData({ address: 'г. Москва, Кутузовский пр-кт, д. 32' });
+logCustomerStatus(customerModel);
 
 console.log('Устанавливаем емэйл')
-customerData[2].value = 'test@mail.ru';
-customerModel.setData(customerData[2]);
-validateCustomerData(customerModel, customerData);
-console.log('Данные покупателя:', customerModel.getData());
+customerModel.setData({ email: 'test@mail.ru' });
+logCustomerStatus(customerModel);
 
-console.log('Устанавливаем номер телефона')
-customerData[3].value = '+7 (999) 999-99-99';
-customerModel.setData(customerData[3]);
-validateCustomerData(customerModel, customerData);
-console.log('Данные покупателя:', customerModel.getData());
+console.log('Устанавливаем номер телефона');
+customerModel.setData({ phone: '+7 (999) 999-99-99' });
+logCustomerStatus(customerModel);
 
 // Очищаем данные покупателя
 console.log('Очищаем данные покупателя')
 customerModel.clearData();
-console.log('Данные покупателя:', customerModel.getData());
+logCustomerStatus(customerModel);
+
+// получаем товары с сервера
+dataService.getProducts()
+           .then((items) => {
+              // сохраняем товары с сервера в модель каталога
+              productsModel.setItems(items);
+              console.log('Массив товаров из каталога, полученные с сервера:', productsModel.getItems());
+           })
+           .catch((error) => console.error('Ошибка при получении товаров:', error.message));

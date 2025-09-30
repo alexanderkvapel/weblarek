@@ -3,14 +3,6 @@ export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
 // Методы оплаты заказа
 export type TPayment = 'CARD' | 'CASH' | '';
 
-// Типы полей при оформлении заказа
-export type TFieldType = 'PAYMENT' | 'ADDRESS' | 'EMAIL' | 'PHONE';
-// Используется для обработки входящих полей для валидации и установлении значений
-export type TField = {
-  type: TFieldType; // тип поля
-  value: TPayment | string; // значение поля
-};
-
 export interface IApi {
     get<T extends object>(uri: string): Promise<T>; // GET Request
     post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>; // POST Request

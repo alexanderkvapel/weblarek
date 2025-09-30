@@ -1,4 +1,4 @@
-import { TPayment, ICustomer, TField } from '../../types/index.ts';
+import { TPayment, ICustomer } from '../../types/index.ts';
 
 /**
  * Содержит данные покупателя, которые тот должен указать при оформлении заказа, логику для работы с ними и их обработки.
@@ -25,14 +25,10 @@ export default class Customer {
 
   /**
    * сохранение данных в модели
-   * @param {TField[] | TField} fields объект, содержащий свойства: тип поля TFieldType и значение поля или массив таких объектов
+   * @param {Record<string, string>} fields объект, содержащий пару(ы) название и значение поля
    */
-  setData(fields: TField[] | TField): void {
-    if (Array.isArray(fields)) {
-      fields.forEach(field => this.setValue(field));
-    } else {
-      this.setValue(fields);
-    } 
+  setData(fields: Record<string, string>): void {
+    Object.assign(this as object, fields);
   }
 
   /**
@@ -47,46 +43,16 @@ export default class Customer {
 
   /**
    * валидация данных
-   * @param {TField} field объект, содержащий свойства: тип поля TFieldType и значение поля
+   * @returns {Record<string, string>} объект, содержащий пару(ы) название поля и ошибка валидации для него, если имеется
    */
-  validateData(field: TField): string {
-    if (!field.value) {
-      switch (field.type) {
-        case 'PAYMENT':
-          return 'Не выбран вид оплаты';
-        case 'ADDRESS':
-          return 'Укажите адрес';
-        case 'EMAIL':
-          return 'Укажите емэйл';
-        case 'PHONE':
-          return 'Укажите телефон';
-      }
-    } else {
-      return '';
-    }
-  }
+  validateData(): Record<string, string> {
+    const errors: Record<string, string> = {};
 
-  /**
-   * присваивает значение в поле
-   * @param {TField} field объект, содержащий свойства: тип поля TFieldType и значение поля
-   */
-  private setValue(field: TField): void {
-    const type = field.type;
-    const value = field.value;
+    if (this.payment.trim() === '') errors['payment'] = 'Не выбран вид оплаты';
+    if (this.address.trim() === '') errors['address'] = 'Укажите адрес';
+    if (this.email.trim() === '') errors['email'] = 'Укажите емэйл';
+    if (this.phone.trim() === '') errors['phone'] = 'Укажите телефон';
 
-    switch (type) {
-      case 'PAYMENT':
-        this.payment = value as TPayment;
-        break;
-      case 'ADDRESS':
-        this.address = value;
-        break;
-      case 'EMAIL':
-        this.email = value;
-        break;
-      case 'PHONE':
-        this.phone = value;
-        break;
-    }
+    return errors;
   }
 }
