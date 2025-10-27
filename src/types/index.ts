@@ -43,3 +43,30 @@ export interface IOrderResponse {
     id: string; // идентификатор ответа
     total: number; // общая стоимость товаров
 }
+
+// 
+export interface IBasketRemoveActions {
+    onRemove?: (event: MouseEvent) => void;
+}
+
+// 
+export interface IFormActions {
+    onSubmit?: (event: SubmitEvent) => void;
+}
+
+// 
+export interface IContactsActions {
+  onEmailInput?: (email: string) => void;
+  onPhoneInput?: (phone: string) => void;
+}
+
+// 
+export interface IOrderActions {
+    onPaymentMethodSelect?: (payment: TPayment) => void;
+    onAddressInput?: (address: string) => void;
+};
+
+// 
+export interface ISuccessActions {
+  onOrdered?: () => void; 
+}

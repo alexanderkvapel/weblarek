@@ -49,7 +49,7 @@ function addToCart(cart: Cart, item: IProduct | null): void {
 function logCustomerStatus(customer: Customer): void {
   console.log('\tДанные покупателя:', customer.getData());
   console.log('\tОшибки валидации:', customer.validateData());
-}
+} 
 
 
 // Тестирование функционала
