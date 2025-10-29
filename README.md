@@ -267,7 +267,7 @@ interface ICustomer {
 Сеттеры класса:  
 `set counter(value: number)` - устанавливает количество товаров в корзине в соответствующий элемент.
 
-#### Класс Gallary
+#### Класс Gallery
 Отвечает за каталог товаров.
 
 Конструктор:  
@@ -277,7 +277,7 @@ interface ICustomer {
 `catalogElement: HTMLElement` - хранит элемент, в котором будут находиться карточки товара.  
 
 Сеттеры класса:  
-`set catalog(value: HTMLElement[])` - заполняет контейнер карточками товаров.
+`set catalog(items: HTMLElement[])` - заполняет контейнер карточками товаров.
 
 #### Класс Basket
 Отвечает за корзину товаров.
@@ -343,7 +343,7 @@ interface ICustomer {
 `categoryElement: HTMLElement` - хранит элемент с категорией товара.   
 `descriptionElement: HTMLElement` - хранит элемент с описанием товара.  
 `buttonElement: HTMLButtonElement` - хранит элемент кнопки добавления(удаления) в(из) корзину(ы).  
-`inCart: boolean = false` - хранит состояние, которое говорит о нахождении товара в коризне. По умолчанию не в корзине.  
+`inBasket: boolean = false` - хранит состояние, которое говорит о нахождении товара в коризне. По умолчанию не в корзине.  
 `events: IEvents` - хранит объект событий, который уведомляет о действиях пользователя.
 
 Сеттеры класса:  
@@ -352,7 +352,7 @@ interface ICustomer {
 `set description(value: string)` - устанавливает описание товара в соответствующий элемент.
 
 Методы класса:  
-`render(data: IProduct, inCart = false): HTMLElement` - рендерит карточку товара в соответствии с переданным data.
+`render(data: IProduct, inBasket = false): HTMLElement` - рендерит карточку товара в соответствии с переданным data.
 
 #### Класс FormOrder
 Отвечает за форму с выбором оплаты и адреса доставки.
@@ -376,7 +376,7 @@ interface ICustomer {
 
 Методы класса:  
 `selectPaymentMethod(payment: TPayment): void` - переключает способ оплаты.  
-`validateAddress(errors?: {[key: string]: string}): void` - проверяет корректность адреса доставки.
+`validateOrder(errors?: {[key: string]: string}): void` - проверяет корректность адреса доставки.
 
 #### Класс FormContacts
 Отвечает за форму с контактными данными.
@@ -398,7 +398,7 @@ interface ICustomer {
 `get contactsData(): IContactsData` - возвращает данные формы.
 
 Методы класса:  
-`validate(): void` - проверяет корректность установленной электронной почты и телефона.
+`validateContacts(errors?: {[key: string]: string}): void` - проверяет корректность установленной электронной почты и телефона.
 
 #### Класс Success
 Отвечаеет за подтверждение успешного заказа.
@@ -412,3 +412,14 @@ interface ICustomer {
 
 Сеттеры класса:  
 `set totalPrice(value: number)` - устанавливает сумму оформленного заказа в соответствующий элемент.
+
+### Генерируемые события
+`gallery:changed` - обновление списка карточек в галерее.  
+`card:open` - открытие модального окна с информацией о карточке товара.  
+`card:add-to-basket` - добавление товара в корзину.  
+`card:delete-from-basket` - удаление товара из корзины.  
+`basket:counter-changed` - обновление счетчик количества товаров в корзине.  
+`basket:open` - открытие модального окна корзины.  
+`order:order` - открытие модального окна с выбором способа оплаты и адреса доставки.  
+`order:contacts` - открытие модального окна с контактными данными.  
+`order:success` - открытие модального окна успешно оформленного заказа.

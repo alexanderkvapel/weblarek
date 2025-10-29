@@ -1,4 +1,5 @@
 import { IProduct } from '../../types/index.ts';
+import { IEvents } from '../base/Events.ts';
 
 /**
  * Содержит в себе данные о товарах, которые можно купить в приложении и всю логику работы с ними.
@@ -7,13 +8,14 @@ export default class Products {
   private items: IProduct[] = [];
   private selectedItem: IProduct | null = null;
 
-  constructor() {}
+  constructor(protected events: IEvents) {}
 
   /**
    * сохранение массива товаров полученного в параметрах метода
    */
   setItems(items: IProduct[]): void {
     this.items = [...items];
+    this.events.emit('gallery:changed');
   }
 
   /**
