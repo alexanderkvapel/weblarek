@@ -10,7 +10,7 @@ export type TCardCatalog = Pick <IProduct, 'id' | 'title' | 'image' | 'category'
 type CategoryKey = keyof typeof categoryMap;
 
 
-export class Basket extends Card<TCardCatalog> {
+export class CardCatalog extends Card<TCardCatalog> {
   protected imageElement: HTMLImageElement;
   protected categoryElement: HTMLElement;
 

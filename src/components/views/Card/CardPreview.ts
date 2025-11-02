@@ -9,7 +9,7 @@ export class CardPreview extends Card<ICard> {
   protected categoryElement: HTMLElement;
   protected descriptionElement: HTMLElement;
   protected buttonElement: HTMLButtonElement;
-  protected inBasket: boolean = false;
+  protected inCart: boolean = false;
 
   constructor(container: HTMLElement, protected events: IEvents) {
     super(container);
@@ -22,17 +22,15 @@ export class CardPreview extends Card<ICard> {
     this.buttonElement.addEventListener('click', () => {
       if (!this.id) return;
 
-      this.inBasket = !this.inBasket;
+      this.inCart = !this.inCart;
       
-      if (this.inBasket) {
+      if (this.inCart) {
         this.buttonElement.textContent = 'Удалить из корзины';
-        this.events.emit('card:add-to-basket', { id: this.id });
+        this.events.emit('card:add-to-cart', { id: this.id });
       } else { 
         this.buttonElement.textContent = 'Купить';
-        this.events.emit('card:delete-from-basket', { id: this.id });
+        this.events.emit('card:delete-from-cart', { id: this.id });
       }
-
-      this.events.emit('basket:counter-changed');
     });
   }
 
@@ -55,10 +53,10 @@ export class CardPreview extends Card<ICard> {
     this.description = data.description;
     this.price = data.price;
     this.image = data.image;
-    this.inBasket = inBasket;
+    this.inCart = inBasket;
 
-    if (this.price) {
-      if (this.inBasket) this.buttonElement.textContent = 'Удалить из корзины';
+    if (data.price) {
+      if (this.inCart) this.buttonElement.textContent = 'Удалить из корзины';
       else this.buttonElement.textContent = 'Купить';
       this.buttonElement.disabled = false;
     } else {

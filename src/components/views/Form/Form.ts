@@ -33,7 +33,7 @@ export abstract class Form extends Component<{}> {
     this.errorMessageElement.textContent = '';
   }
 
-  validate(errors: {[key: string]: string}): void {
+  validate(errors: Record<string, string>): void {
     const errorMessages = Object.values(errors).filter((err) => err);
 
     if (errorMessages.length) {

@@ -4,19 +4,19 @@ import { IEvents } from '../../base/Events';
 import { Card, ICard } from './Card';
 
 
-export class CardBasket extends Card<ICard> {
+export class CardCart extends Card<ICard> {
   protected indexElement: HTMLElement;
   protected deleteButtonElement: HTMLButtonElement;
 
   constructor(container: HTMLElement, protected events: IEvents) {
     super(container);
 
-    this.indexElement = ensureElement<HTMLElement>('', this.container);
+    this.indexElement = ensureElement<HTMLElement>('.basket__item-index', this.container);
     this.deleteButtonElement = ensureElement<HTMLButtonElement>('.basket__item-delete', this.container);
 
     this.deleteButtonElement.addEventListener('click', () => {
-      this.events?.emit('card:delete-from-basket', { id: this.id });
-      this.events?.emit('basket:counter-changed');
+      this.events?.emit('card:delete-from-cart', { id: this.id });
+      this.events?.emit('cart:open');
     })
   }
 

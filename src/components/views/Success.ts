@@ -17,9 +17,7 @@ export class Success extends Component<ISuccess> {
     this.buttonElement = ensureElement<HTMLButtonElement>('.order-success__close', this.container);
 
     if (actions?.onOrdered) {
-      this.buttonElement.addEventListener('click', () => {
-        actions.onOrdered;
-      });
+      this.buttonElement.addEventListener('click', actions.onOrdered);
     }
   }
 

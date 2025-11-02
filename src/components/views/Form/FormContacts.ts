@@ -51,7 +51,7 @@ export class FormContacts extends Form {
     }
   }
 
-  validateContacts(errors?: {[key: string]: string}): void {
+  validateContacts(errors?: Record<string, string>): void {
     this.validate(errors || {});
   }
 }

@@ -3,13 +3,13 @@ import { Component } from '../base/Component';
 import { IEvents } from '../base/Events';
 
 
-interface IBasket {
+interface ICart {
   items: HTMLElement[];
   totalPrice: number;
 }
 
 
-export class Basket extends Component<IBasket> {
+export class Cart extends Component<ICart> {
   protected titleElement: HTMLElement;
   protected itemsElement: HTMLElement;
   protected totalPriceElement: HTMLElement;

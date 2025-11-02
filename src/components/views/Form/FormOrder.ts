@@ -25,15 +25,15 @@ export class FormOrder extends Form {
     this.addressElement = ensureElement<HTMLInputElement>('input[name="address"]', this.container);
 
     this.payByCardElement.addEventListener('click', () => {
-      this.selectPaymentMethod('CARD' as TPayment);
+      this.selectPaymentMethod('CARD');
 
-      if (actions?.onPaymentMethodSelect) actions.onPaymentMethodSelect?.('CARD');
+      if (actions?.onPaymentMethodSelect) actions.onPaymentMethodSelect('CARD');
     });
 
     this.payByCashElement.addEventListener('click', () => {
-      this.selectPaymentMethod('CASH' as TPayment);
+      this.selectPaymentMethod('CASH');
 
-      if (actions?.onPaymentMethodSelect) actions.onPaymentMethodSelect?.('CASH');
+      if (actions?.onPaymentMethodSelect) actions.onPaymentMethodSelect('CASH');
     });
 
     this.addressElement.addEventListener('input', () => {
@@ -74,7 +74,7 @@ export class FormOrder extends Form {
     this.payByCashElement.classList.toggle('button_alt-active', payment === 'CASH');
   }
 
-  validateOrder(errors?: {[key: string]: string}): void {
+  validateOrder(errors?: Record<string, string>): void {
     this.validate(errors || {});
   }
 }
