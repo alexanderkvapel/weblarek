@@ -9,7 +9,8 @@ export interface ICard extends Partial<IProduct> {
 
 
 export abstract class Card<T extends ICard> extends Component<T> {
-  protected id?: string;
+  protected _id?: string;
+  protected _price?: number | null;
   protected titleElement: HTMLElement;
   protected priceElement: HTMLElement;
 
@@ -20,11 +21,17 @@ export abstract class Card<T extends ICard> extends Component<T> {
     this.priceElement = ensureElement<HTMLElement>('.card__price', this.container);
   }
 
+  set id(value: string) {
+    this._id = value;
+  }
+
   set title(value: string) {
     this.titleElement.textContent = value;
   }
 
   set price(value: number | null) {
+    this._price = value;
+    
     if (value) this.priceElement.textContent = `${value} синапсов`;
     else this.priceElement.textContent = 'Бесценно';
   }

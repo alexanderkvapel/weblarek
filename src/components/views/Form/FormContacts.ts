@@ -19,39 +19,22 @@ export class FormContacts extends Form {
     this.emailElement = ensureElement<HTMLInputElement>('input[name="email"]', this.container);
     this.phoneElement = ensureElement<HTMLInputElement>('input[name="phone"]', this.container);
 
-    this.emailElement.addEventListener('input', () => {
-      if (actions?.onEmailInput) actions.onEmailInput(this.emailElement.value);
-    });
+    if (actions?.onInput) {
+      this.emailElement.addEventListener('input', () => {
+        actions.onInput?.('email', this.emailElement.value);
+      })
 
-    this.phoneElement.addEventListener('input', () => {
-      if (actions?.onPhoneInput) actions.onPhoneInput(this.phoneElement.value);
-    });
+      this.phoneElement.addEventListener('input', () => {
+        actions.onInput?.('phone', this.phoneElement.value);
+      })
+    }
   }
 
   set email(value: string) {
     this.emailElement.value = value;
   }
 
-  get email(): string {
-    return this.emailElement.value;
-  }
-
   set phone(value: string) {
     this.phoneElement.value = value;
-  }
-
-  get phone(): string {
-    return this.phoneElement.value;
-  }
-
-  get contactsData(): IContacts {
-    return {
-      email: this.email,
-      phone: this.phone,
-    }
-  }
-
-  validateContacts(errors?: Record<string, string>): void {
-    this.validate(errors || {});
   }
 }

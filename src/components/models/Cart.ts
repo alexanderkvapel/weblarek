@@ -1,4 +1,5 @@
 import { IProduct } from '../../types/index.ts';
+import { IEvents } from '../base/Events.ts';
 
 /**
  * Содержит в себе даные о товарах, которые пользователь выбрал для покупки и всю логику работы с ними.
@@ -6,7 +7,7 @@ import { IProduct } from '../../types/index.ts';
 export default class Cart {
   private items: IProduct[] = [];
 
-  constructor() {}
+  constructor(protected events: IEvents) {}
 
   /**
    * добавление товара, который был получен в параметре, в массив корзины
@@ -14,6 +15,7 @@ export default class Cart {
    */
   addItem(item: IProduct): void {
     this.items.push(item);
+    this.events.emit('cart:update');
   }
 
   /**
@@ -28,6 +30,8 @@ export default class Cart {
 
       this.items.splice(indexOfItemToDelete, 1);
     }
+
+    this.events.emit('cart:update');
   }
 
   /**
@@ -74,6 +78,8 @@ export default class Cart {
    */
   clearItems(): void {
     this.items = [];
+
+    this.events.emit('cart:update');
   }
 
   /**

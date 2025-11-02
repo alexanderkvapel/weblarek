@@ -1,4 +1,5 @@
 import { TPayment, ICustomer } from '../../types/index.ts';
+import { IEvents } from '../base/Events.ts';
 
 /**
  * Содержит данные покупателя, которые тот должен указать при оформлении заказа, логику для работы с ними и их обработки.
@@ -9,7 +10,7 @@ export default class Customer {
   private email: string = '';
   private phone: string = '';
 
-  constructor() {}
+  constructor(protected events: IEvents) {}
 
   /**
    * получение всех данных покупателя
@@ -29,6 +30,8 @@ export default class Customer {
    */
   setData(fields: Record<string, string>): void {
     Object.assign(this as object, fields);
+
+    this.events.emit('order:update');
   }
 
   /**
@@ -39,6 +42,8 @@ export default class Customer {
     this.address = '';
     this.email = '';
     this.phone = '';
+
+    this.events.emit('order:update');
   }
 
   /**

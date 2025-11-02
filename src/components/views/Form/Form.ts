@@ -16,7 +16,7 @@ export abstract class Form extends Component<{}> {
     if (actions?.onSubmit) {
       this.container.addEventListener('submit', (event) => {
         event.preventDefault();
-        actions.onSubmit!(event);
+        actions.onSubmit?.(event);
       });
     }
   }

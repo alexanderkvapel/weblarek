@@ -4,66 +4,65 @@ export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
 export type TPayment = 'CARD' | 'CASH' | '';
 
 export interface IApi {
-    get<T extends object>(uri: string): Promise<T>; // GET Request
-    post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>; // POST Request
+  get<T extends object>(uri: string): Promise<T>; // GET Request
+  post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>; // POST Request
 }
 
 // Продукт
 export interface IProduct {
-    id: string; // идентификатор
-    title: string; // наименование
-    description: string; // описание
-    price: number | null; // цена может отсутствовать
-    category: string; // категория
-    image: string; // изображение
+  id: string; // идентификатор
+  title: string; // наименование
+  description: string; // описание
+  price: number | null; // цена может отсутствовать
+  category: string; // категория
+  image: string; // изображение
 }
 
 // Данные покупателя
 export interface ICustomer {
-    payment: TPayment; // тип оплаты
-    address: string; // адрес
-    email: string; // емэйл
-    phone: string; // номер телефона
+  payment: TPayment; // тип оплаты
+  address: string; // адрес
+  email: string; // емэйл
+  phone: string; // номер телефона
 }
 
 // Ответ сервера на запрос на ендпоинт /product/
 export interface IProductResponse {
-    total: number; // количество полученных товаров
-    items: IProduct[]; // товары
+  total: number; // количество полученных товаров
+  items: IProduct[]; // товары
 }
 
 // Запрос серверу на запрос на ендпоинт /order/
 export interface IOrderRequest extends ICustomer {
-    total: number; // общая стоимость товаров
-    items: string[]; // товары
+  total: number; // общая стоимость товаров
+  items: string[]; // товары
 }
 
 // Ответ сервера на запрос на ендпоинт /order/
 export interface IOrderResponse {
-    id: string; // идентификатор ответа
-    total: number; // общая стоимость товаров
+  id: string; // идентификатор ответа
+  total: number; // общая стоимость товаров
 }
 
 // 
 export interface IBasketRemoveActions {
-    onRemove?: (event: MouseEvent) => void;
+  onRemove?: (event: MouseEvent) => void;
 }
 
 // 
 export interface IFormActions {
-    onSubmit?: (event: SubmitEvent) => void;
+  onSubmit?: (event: SubmitEvent) => void;
 }
 
 // 
 export interface IContactsActions {
-  onEmailInput?: (email: string) => void;
-  onPhoneInput?: (phone: string) => void;
+  onInput?: (field: string, value: string) => void;
 }
 
 // 
 export interface IOrderActions {
-    onPaymentMethodSelect?: (payment: TPayment) => void;
-    onAddressInput?: (address: string) => void;
+  onInput?: (field: string, value: string) => void;
+  onPaymentSelect?: (payment: TPayment) => void;
 };
 
 // 

@@ -1,4 +1,3 @@
-import { IEvents } from '../../base/Events';
 import { IProduct } from '../../../types';
 import { categoryMap } from "../../../utils/constants";
 import { Card } from './Card';
@@ -10,19 +9,24 @@ export type TCardCatalog = Pick <IProduct, 'id' | 'title' | 'image' | 'category'
 type CategoryKey = keyof typeof categoryMap;
 
 
+interface IGalleryActions {
+  onClick?: (event: MouseEvent) => void;
+}
+
+
 export class CardCatalog extends Card<TCardCatalog> {
   protected imageElement: HTMLImageElement;
   protected categoryElement: HTMLElement;
 
-  constructor(container: HTMLElement, protected events: IEvents) {
+  constructor(container: HTMLElement, actions?: IGalleryActions) {
     super(container);
 
     this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
     this.categoryElement = ensureElement<HTMLElement>('.card__category', this.container);
 
-    this.container.addEventListener('click', () => {
-      this.events.emit('card:open', { id: this.id });
-    });
+    if (actions?.onClick) {
+      this.container.addEventListener('click', actions.onClick);
+    }
   }
 
   set image(src: string) {
@@ -36,11 +40,5 @@ export class CardCatalog extends Card<TCardCatalog> {
       const className = categoryMap[key as CategoryKey];
       this.categoryElement.classList.toggle(className, key === value)
     });
-  }
-
-  render(data: TCardCatalog): HTMLElement {
-    this.id = data.id;
-
-    return super.render(data);
   }
 }

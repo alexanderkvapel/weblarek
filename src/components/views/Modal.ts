@@ -1,57 +1,49 @@
 import { ensureElement } from '../../utils/utils';
 import { Component } from '../base/Component';
-import { IEvents } from '../base/Events';
 
 
 interface IModal {
   content: HTMLElement;
 }
 
+interface IModalActions {
+  onClose?: () => void;
+}
+
 
 export class Modal extends Component<IModal> {
   protected contentElement: HTMLElement;
   protected closeButtonElement: HTMLButtonElement;
-  protected pageElement: HTMLElement;
-  protected isOpen = false;
 
 
-  constructor(container: HTMLElement, protected events: IEvents) {
+  constructor(container: HTMLElement, actions?: IModalActions) {
     super(container);
 
     this.contentElement = ensureElement<HTMLElement>('.modal__content', this.container);
     this.closeButtonElement = ensureElement<HTMLButtonElement>('.modal__close', this.container);
-    this.pageElement = ensureElement<HTMLElement>('.page__wrapper');
 
-    this.closeButtonElement.addEventListener('click', () => {
-      this.close();
-    });
+    this.closeButtonElement.addEventListener('click', () => this.close(actions?.onClose));
 
     this.container.addEventListener('click', (event) => {
-      if (event.target === this.container) this.close();
+      if (event.target === this.container) this.close(actions?.onClose);
     });
-
-    document.addEventListener('keydown', (event) => {
-      if (this.isOpen && event.key === 'Escape') this.close();
-    })
   }
 
   set content(value: HTMLElement) {
     this.contentElement.replaceChildren(value);
   }
 
-  open(): void {
-    this.pageElement.classList.add('page__wrapper_locked');
-    this.container.classList.add('modal_active');
-    this.isOpen = true;
+  open(content?: HTMLElement): void {
+    if (content) this.contentElement.replaceChildren(content);
 
-    this.events.emit('modal:open');
+    this.container.classList.add('modal_active');
+    document.body.style.overflow = "hidden";
   }
 
-  close(): void {
-    this.pageElement.classList.remove('page__wrapper_locked');
+  close(callback?: () => void) {
     this.container.classList.remove('modal_active');
-    this.isOpen = false;
+    document.body.style.overflow = "auto";
 
-    this.events.emit('modal:close');
+    callback?.();
   }
 }

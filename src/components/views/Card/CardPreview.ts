@@ -1,7 +1,10 @@
-import { IEvents } from '../../base/Events';
-import { IProduct } from '../../../types';
 import { Card, ICard } from './Card';
 import { ensureElement } from '../../../utils/utils';
+
+
+interface IPreviewActions {
+  onClick?: (event: MouseEvent) => void;
+}
 
 
 export class CardPreview extends Card<ICard> {
@@ -9,9 +12,8 @@ export class CardPreview extends Card<ICard> {
   protected categoryElement: HTMLElement;
   protected descriptionElement: HTMLElement;
   protected buttonElement: HTMLButtonElement;
-  protected inCart: boolean = false;
 
-  constructor(container: HTMLElement, protected events: IEvents) {
+  constructor(container: HTMLElement, actions?: IPreviewActions) {
     super(container);
 
     this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
@@ -19,19 +21,9 @@ export class CardPreview extends Card<ICard> {
     this.descriptionElement = ensureElement<HTMLElement>('.card__text', this.container);
     this.buttonElement = ensureElement<HTMLButtonElement>('.card__button', this.container);
 
-    this.buttonElement.addEventListener('click', () => {
-      if (!this.id) return;
-
-      this.inCart = !this.inCart;
-      
-      if (this.inCart) {
-        this.buttonElement.textContent = 'Удалить из корзины';
-        this.events.emit('card:add-to-cart', { id: this.id });
-      } else { 
-        this.buttonElement.textContent = 'Купить';
-        this.events.emit('card:delete-from-cart', { id: this.id });
-      }
-    });
+    if (actions?.onClick) {
+      this.buttonElement.addEventListener('click', actions.onClick);
+    }
   }
 
   set image(src: string) {
@@ -46,24 +38,14 @@ export class CardPreview extends Card<ICard> {
     this.descriptionElement.textContent = value;
   }
 
-  render(data: IProduct, inBasket = false): HTMLElement {
-    this.id = data.id;
-    this.category = data.category;
-    this.title = data.title;
-    this.description = data.description;
-    this.price = data.price;
-    this.image = data.image;
-    this.inCart = inBasket;
-
-    if (data.price) {
-      if (this.inCart) this.buttonElement.textContent = 'Удалить из корзины';
-      else this.buttonElement.textContent = 'Купить';
-      this.buttonElement.disabled = false;
-    } else {
+  set inCart(value: boolean) {
+    if (!this._price) {
       this.buttonElement.textContent = 'Недоступно';
       this.buttonElement.disabled = true;
+    } else {
+      if (value) this.buttonElement.textContent = 'Удалить из корзины';
+      else this.buttonElement.textContent = 'Купить';
+      this.buttonElement.disabled = false;
     }
-
-    return super.render(data);
   }
 }
