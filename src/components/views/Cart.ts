@@ -23,13 +23,11 @@ export class Cart extends Component<ICart> {
     this.totalPriceElement = ensureElement<HTMLElement>('.basket__price', this.container);
     this.orderButtonElement = ensureElement<HTMLButtonElement>('.basket__button', this.container);
 
-    this.orderButtonElement.addEventListener('click', () => {
-      this.events?.emit('order:order');
-    });
-  }
+    this.itemsElement.replaceChildren(document.createElement('p').textContent = 'Корзина пуста');
 
-  set orderButtonText(value: string) {
-    this.orderButtonElement.textContent = value;
+    this.orderButtonElement.addEventListener('click', () => {
+      this.events.emit('form:order');
+    });
   }
 
   set disableOrderButton(value: boolean) {
@@ -37,8 +35,6 @@ export class Cart extends Component<ICart> {
   }
 
   set items(items: HTMLElement[]) {
-    this.orderButtonText = 'Оформить';
-
     if (items.length) {
       this.disableOrderButton = false;
       this.itemsElement.replaceChildren(...items);

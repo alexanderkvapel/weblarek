@@ -1,25 +1,21 @@
+import { IProduct } from '../../../types';
 import { ensureElement } from '../../../utils/utils';
-import { Card, ICard } from './Card';
+import { IEvents } from '../../base/Events';
+import { Card } from './Card';
 
-
-interface ICartActions {
-  onDelete?: (event: MouseEvent) => void;
-}
-
-
-export class CardCart extends Card<ICard> {
+export class CardCart extends Card<IProduct> {
   protected indexElement: HTMLElement;
   protected deleteButtonElement: HTMLButtonElement;
 
-  constructor(container: HTMLElement, actions?: ICartActions) {
+  constructor(container: HTMLElement, protected events: IEvents) {
     super(container);
 
     this.indexElement = ensureElement<HTMLElement>('.basket__item-index', this.container);
     this.deleteButtonElement = ensureElement<HTMLButtonElement>('.basket__item-delete', this.container);
 
-    if (actions?.onDelete) {
-      this.deleteButtonElement.addEventListener('click', actions.onDelete);
-    }
+    this.deleteButtonElement.addEventListener('click', () => {
+      this.events.emit('card:delete-from-cart', { id: this._id });
+    })
   }
 
   set index(value: number) {

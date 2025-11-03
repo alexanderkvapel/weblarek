@@ -18,6 +18,10 @@ export interface IProduct {
   image: string; // изображение
 }
 
+export interface IProductCart extends IProduct {
+  inCart: boolean
+}
+
 // Данные покупателя
 export interface ICustomer {
   payment: TPayment; // тип оплаты
@@ -42,30 +46,4 @@ export interface IOrderRequest extends ICustomer {
 export interface IOrderResponse {
   id: string; // идентификатор ответа
   total: number; // общая стоимость товаров
-}
-
-// 
-export interface IBasketRemoveActions {
-  onRemove?: (event: MouseEvent) => void;
-}
-
-// 
-export interface IFormActions {
-  onSubmit?: (event: SubmitEvent) => void;
-}
-
-// 
-export interface IContactsActions {
-  onInput?: (field: string, value: string) => void;
-}
-
-// 
-export interface IOrderActions {
-  onInput?: (field: string, value: string) => void;
-  onPaymentSelect?: (payment: TPayment) => void;
-};
-
-// 
-export interface ISuccessActions {
-  onOrdered?: () => void; 
 }

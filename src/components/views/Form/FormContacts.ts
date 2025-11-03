@@ -1,33 +1,24 @@
-import { IFormActions, IContactsActions } from '../../../types/index';
 import { ensureElement } from '../../../utils/utils';
+import { IEvents } from '../../base/Events';
 import { Form } from './Form';
-
-export interface IFormContactsActions extends IFormActions, IContactsActions {};
-
-export interface IContacts {
-    email: string;
-    phone: string;
-}
 
 export class FormContacts extends Form {
   protected emailElement: HTMLInputElement;
   protected phoneElement: HTMLInputElement;
 
-  constructor(container: HTMLElement, actions?: IFormContactsActions) {
-    super(container, actions);
+  constructor(container: HTMLElement, protected events: IEvents) {
+    super(container, events);
 
     this.emailElement = ensureElement<HTMLInputElement>('input[name="email"]', this.container);
     this.phoneElement = ensureElement<HTMLInputElement>('input[name="phone"]', this.container);
 
-    if (actions?.onInput) {
-      this.emailElement.addEventListener('input', () => {
-        actions.onInput?.('email', this.emailElement.value);
-      })
+    this.emailElement.addEventListener('input', () => {
+      this.events.emit('email:chosen', { value: this.emailElement.value });
+    });
 
-      this.phoneElement.addEventListener('input', () => {
-        actions.onInput?.('phone', this.phoneElement.value);
-      })
-    }
+    this.phoneElement.addEventListener('input', () => {
+      this.events.emit('phone:chosen', { value: this.phoneElement.value });
+    });
   }
 
   set email(value: string) {
@@ -36,5 +27,12 @@ export class FormContacts extends Form {
 
   set phone(value: string) {
     this.phoneElement.value = value;
+  }
+
+  reset(): void {
+    this.email = '';
+    this.phone = '';
+    this.errorMessage = '';
+    this.disableSubmitButton = true;
   }
 }

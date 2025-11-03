@@ -2,12 +2,12 @@ import { ensureElement } from '../../utils/utils';
 import { Component } from '../base/Component';
 
 
-interface IGallery {
+interface ICatalog {
   catalog: HTMLElement[];
 }
 
 
-export class Gallery extends Component<IGallery> {
+export class Catalog extends Component<ICatalog> {
   protected catalogElement: HTMLElement;
 
   constructor(container: HTMLElement) {

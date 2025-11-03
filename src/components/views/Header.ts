@@ -19,7 +19,7 @@ export class Header extends Component<IHeader> {
     this.counterElement = ensureElement<HTMLElement>('.header__basket-counter', this.container);
 
     this.cartButtonElement.addEventListener('click', () => {
-      this.events.emit('cart:open');
+      this.events.emit('cart:clicked');
     });
   }
 

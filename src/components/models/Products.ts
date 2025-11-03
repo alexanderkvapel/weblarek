@@ -15,7 +15,7 @@ export default class Products {
    */
   setItems(items: IProduct[]): void {
     this.items = [...items];
-    this.events.emit('gallery:update');
+    this.events.emit('products:saved');
   }
 
   /**
@@ -31,7 +31,7 @@ export default class Products {
    */
   setSelectedItem(id: string): void {
     this.selectedItem = this.getItemById(id);
-    this.events.emit('card:open');
+    this.events.emit('card:selected');
   }
 
   /**

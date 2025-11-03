@@ -1,19 +1,20 @@
-import { Card, ICard } from './Card';
+import { Card } from './Card';
 import { ensureElement } from '../../../utils/utils';
+import { IEvents } from '../../base/Events';
+import { categoryMap } from "../../../utils/constants";
+import { IProductCart } from '../../../types';
 
 
-interface IPreviewActions {
-  onClick?: (event: MouseEvent) => void;
-}
+type CategoryKey = keyof typeof categoryMap;
 
 
-export class CardPreview extends Card<ICard> {
+export class CardPreview extends Card<IProductCart> {
   protected imageElement: HTMLImageElement;
   protected categoryElement: HTMLElement;
   protected descriptionElement: HTMLElement;
   protected buttonElement: HTMLButtonElement;
 
-  constructor(container: HTMLElement, actions?: IPreviewActions) {
+  constructor(container: HTMLElement, protected events: IEvents) {
     super(container);
 
     this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
@@ -21,9 +22,9 @@ export class CardPreview extends Card<ICard> {
     this.descriptionElement = ensureElement<HTMLElement>('.card__text', this.container);
     this.buttonElement = ensureElement<HTMLButtonElement>('.card__button', this.container);
 
-    if (actions?.onClick) {
-      this.buttonElement.addEventListener('click', actions.onClick);
-    }
+    this.buttonElement.addEventListener('click', () => {
+      this.events.emit('card:button-clicked', { id: this._id });
+    });
   }
 
   set image(src: string) {
@@ -32,20 +33,32 @@ export class CardPreview extends Card<ICard> {
 
   set category(value: string) {
     this.categoryElement.textContent = value;
+
+    Object.keys(categoryMap).forEach(key => {
+      const className = categoryMap[key as CategoryKey];
+      this.categoryElement.classList.toggle(className, key === value)
+    });
   }
 
   set description(value: string) {
     this.descriptionElement.textContent = value;
   }
 
-  set inCart(value: boolean) {
-    if (!this._price) {
+  set price(value: number | null) {
+    if (value) {
+      this.priceElement.textContent = `${value} синапсов`;
+      this.buttonElement.textContent = 'Купить';
+      this.buttonElement.disabled = false;
+    } else {
+      this.priceElement.textContent = `Бесценно`;
       this.buttonElement.textContent = 'Недоступно';
       this.buttonElement.disabled = true;
-    } else {
-      if (value) this.buttonElement.textContent = 'Удалить из корзины';
-      else this.buttonElement.textContent = 'Купить';
-      this.buttonElement.disabled = false;
+    }
+  }
+
+  set inCart(value: boolean) {
+    if (value) {
+      this.buttonElement.textContent = 'Удалить из корзины';
     }
   }
 }

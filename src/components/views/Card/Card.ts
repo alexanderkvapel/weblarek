@@ -2,15 +2,8 @@ import { IProduct } from '../../../types';
 import { ensureElement } from '../../../utils/utils';
 import { Component } from '../../base/Component';
 
-
-export interface ICard extends Partial<IProduct> {
-  index?: number;
-}
-
-
-export abstract class Card<T extends ICard> extends Component<T> {
+export abstract class Card<T extends IProduct> extends Component<T> {
   protected _id?: string;
-  protected _price?: number | null;
   protected titleElement: HTMLElement;
   protected priceElement: HTMLElement;
 
@@ -30,9 +23,10 @@ export abstract class Card<T extends ICard> extends Component<T> {
   }
 
   set price(value: number | null) {
-    this._price = value;
-    
-    if (value) this.priceElement.textContent = `${value} синапсов`;
-    else this.priceElement.textContent = 'Бесценно';
+    if (value) {
+      this.priceElement.textContent = `${value} синапсов`;
+    } else {
+      this.priceElement.textContent = 'Бесценно';
+    }
   }
 }

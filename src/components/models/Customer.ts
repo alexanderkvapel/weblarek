@@ -31,7 +31,7 @@ export default class Customer {
   setData(fields: Record<string, string>): void {
     Object.assign(this as object, fields);
 
-    this.events.emit('order:update');
+    this.events.emit('customer:updated');
   }
 
   /**
@@ -43,7 +43,7 @@ export default class Customer {
     this.email = '';
     this.phone = '';
 
-    this.events.emit('order:update');
+    this.events.emit('customer:updated');
   }
 
   /**
