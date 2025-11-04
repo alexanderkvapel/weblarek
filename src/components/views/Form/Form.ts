@@ -20,7 +20,7 @@ export abstract class Form extends Component<{}> {
   }
 
   set errorMessage(value: string) {
-    this.errorMessageElement.textContent = value;
+    this.setText(this.errorMessageElement, value);
   }
 
   set disableSubmitButton(value: boolean) {

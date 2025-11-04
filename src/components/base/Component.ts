@@ -18,6 +18,20 @@ export abstract class Component<T> {
         }
     }
 
+    // Установить текстовый контент элементу
+    protected setText(element: HTMLElement, text?: string) {
+        if (element) {
+            element.textContent = text ? text : '';
+        }
+    }
+
+    // Установить значение инпуту
+    protected setValue(element: HTMLInputElement, value?: string) {
+        if (element) {
+            element.value = value ? value : '';
+        }
+    }
+
     // Вернуть корневой DOM-элемент
     render(data?: Partial<T>): HTMLElement {
         Object.assign(this as object, data ?? {});

@@ -48,6 +48,6 @@ export class Cart extends Component<ICart> {
   }
 
   set totalPrice(value: number) {
-    this.totalPriceElement.textContent = `${value} синапсов`;
+    this.setText(this.totalPriceElement, `${value} синапсов`);
   }
 }

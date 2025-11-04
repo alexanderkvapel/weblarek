@@ -32,7 +32,7 @@ export class CardPreview extends Card<IProductCart> {
   }
 
   set category(value: string) {
-    this.categoryElement.textContent = value;
+    this.setText(this.categoryElement, value);
 
     Object.keys(categoryMap).forEach(key => {
       const className = categoryMap[key as CategoryKey];
@@ -41,24 +41,24 @@ export class CardPreview extends Card<IProductCart> {
   }
 
   set description(value: string) {
-    this.descriptionElement.textContent = value;
+    this.setText(this.descriptionElement, value);
   }
 
   set price(value: number | null) {
     if (value) {
-      this.priceElement.textContent = `${value} синапсов`;
-      this.buttonElement.textContent = 'Купить';
+      this.setText(this.priceElement, `${value} синапсов`);
+      this.setText(this.buttonElement, 'Купить');
       this.buttonElement.disabled = false;
     } else {
-      this.priceElement.textContent = `Бесценно`;
-      this.buttonElement.textContent = 'Недоступно';
+      this.setText(this.priceElement, `Бесценно`);
+      this.setText(this.buttonElement, 'Недоступно');
       this.buttonElement.disabled = true;
     }
   }
 
   set inCart(value: boolean) {
     if (value) {
-      this.buttonElement.textContent = 'Удалить из корзины';
+      this.setText(this.buttonElement, 'Удалить из корзины');
     }
   }
 }

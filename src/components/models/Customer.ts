@@ -26,12 +26,12 @@ export default class Customer {
 
   /**
    * сохранение данных в модели
-   * @param {Record<string, string>} fields объект, содержащий пару(ы) название и значение поля
+   * @param {Record<string, TPayment | string>} fields объект, содержащий пару(ы) название и значение поля
    */
   setData(fields: Record<string, string>): void {
     Object.assign(this as object, fields);
 
-    this.events.emit('customer:updated');
+    this.events.emit('customer:updated', fields);
   }
 
   /**

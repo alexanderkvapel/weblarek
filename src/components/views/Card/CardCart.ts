@@ -19,6 +19,6 @@ export class CardCart extends Card<IProduct> {
   }
 
   set index(value: number) {
-    this.indexElement.textContent = String(value);
+    this.setText(this.indexElement, String(value));
   }
 }

@@ -19,14 +19,14 @@ export abstract class Card<T extends IProduct> extends Component<T> {
   }
 
   set title(value: string) {
-    this.titleElement.textContent = value;
+    this.setText(this.titleElement, value);
   }
 
   set price(value: number | null) {
     if (value) {
-      this.priceElement.textContent = `${value} синапсов`;
+      this.setText(this.priceElement, `${value} синапсов`);
     } else {
-      this.priceElement.textContent = 'Бесценно';
+      this.setText(this.priceElement, `Бесценно`);
     }
   }
 }

@@ -43,13 +43,6 @@ export class FormOrder extends Form {
   }
 
   set address(value: string) {
-    this.addressElement.value = value;
-  }
-
-  reset(): void {
-    this.paymentMethod = '';
-    this.address = '';
-    this.errorMessage = '';
-    this.disableSubmitButton = true;
+    this.setValue(this.addressElement, value);
   }
 }

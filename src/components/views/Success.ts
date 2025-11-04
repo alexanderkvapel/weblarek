@@ -22,6 +22,6 @@ export class Success extends Component<ISuccess> {
   }
 
   set totalPrice(value: number) {
-    this.descriptionElement.textContent = `Списано ${value} синапсов`;
+    this.setText(this.descriptionElement, `Списано ${value} синапсов`);
   }
 }

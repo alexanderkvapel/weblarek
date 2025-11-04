@@ -28,7 +28,7 @@ export class CardCatalog extends Card<IProduct> {
   }
 
   set category(value: string) {
-    this.categoryElement.textContent = value;
+    this.setText(this.categoryElement, value);
 
     Object.keys(categoryMap).forEach(key => {
       const className = categoryMap[key as CategoryKey];

@@ -22,17 +22,10 @@ export class FormContacts extends Form {
   }
 
   set email(value: string) {
-    this.emailElement.value = value;
+    this.setValue(this.emailElement, value);
   }
 
   set phone(value: string) {
-    this.phoneElement.value = value;
-  }
-
-  reset(): void {
-    this.email = '';
-    this.phone = '';
-    this.errorMessage = '';
-    this.disableSubmitButton = true;
+    this.setValue(this.phoneElement, value);
   }
 }

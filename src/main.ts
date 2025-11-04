@@ -1,13 +1,19 @@
 import './scss/styles.scss';
+
 import { IOrderRequest, TPayment } from './types/index.ts';
 import { API_URL, CDN_URL } from './utils/constants.ts';
+
 import { cloneTemplate, ensureElement } from './utils/utils.ts';
+
 import { EventEmitter } from './components/base/Events.ts';
 import { Api } from './components/base/Api.ts';
+
 import Products from './components/models/Products.ts';
 import Cart from './components/models/Cart.ts';
 import Customer from './components/models/Customer.ts';
+
 import DataService from './components/services/DataService.ts';
+
 import { Header } from './components/views/Header.ts';
 import { Catalog } from './components/views/Catalog.ts';
 import { Modal } from './components/views/Modal.ts';
@@ -64,6 +70,7 @@ dataService.getProducts()
            // обрабатываем ошибки
            .catch((error) => console.error('Ошибка при получении товаров:', error.message));
 
+// закрытие модального окна
 events.on('modal:closed', () => {
   if (productsModel.getSelectedItem()) {
     productsModel.setSelectedItem('');
@@ -75,6 +82,7 @@ events.on('modal:closed', () => {
   });
 });
 
+// отображение карточек товаров в каталоге
 events.on('products:saved', () => {
   const items = productsModel.getItems().map(item => {
     const card = new CardCatalog(cloneTemplate(cardCatalogTemplate), events);
@@ -85,6 +93,7 @@ events.on('products:saved', () => {
   catalogView.render({ catalog: items });
 });
 
+// нажатие на карточку товара
 events.on('card:clicked', ({ id }: { id:string }) => {
   const item = productsModel.getItemById(id);
 
@@ -93,6 +102,7 @@ events.on('card:clicked', ({ id }: { id:string }) => {
   }
 });
 
+// открытие карточки товара в модальном окне
 events.on('card:selected', () => {
   const item = productsModel.getSelectedItem();
 
@@ -109,6 +119,7 @@ events.on('card:selected', () => {
   };
 });
 
+// нажатие на "Купить"/"Удалить из корзины" в карточке товара
 events.on('card:button-clicked', ({ id }: { id: string }) => {
   const item = productsModel.getItemById(id);
 
@@ -126,6 +137,7 @@ events.on('card:button-clicked', ({ id }: { id: string }) => {
   }
 });
 
+// удаление товара из корзины
 events.on('card:delete-from-cart', ({ id }: { id: string }) => {
   const item = productsModel.getItemById(id);
 
@@ -134,6 +146,7 @@ events.on('card:delete-from-cart', ({ id }: { id: string }) => {
   }
 });
 
+// открытие корзины
 events.on('cart:clicked', () => {
   modalView.render({
     content: cartView.render(),
@@ -141,6 +154,7 @@ events.on('cart:clicked', () => {
   });
 });
 
+// обновление данных корзины
 events.on('cart:updated', () => {
   const items = cartModel.getItems().map((item, index) => {
     const card = new CardCart(cloneTemplate(cardCartTemplate), events);
@@ -157,6 +171,7 @@ events.on('cart:updated', () => {
   headerView.render({ counter: cartModel.getItemsCount() });
 });
 
+// открытие формы оформления заказа
 events.on('form:order', () => {
   modalView.render({
     content: formOrderView.render(),
@@ -164,27 +179,49 @@ events.on('form:order', () => {
   });
 });
 
+// выбор способа оплаты
 events.on('payment:chosen', ({ value }: { value: TPayment }) => {
   customerModel.setData({ payment: value });
   formOrderView.paymentMethod = value;
 });
 
+// введение адреса доставки
 events.on('address:chosen', ({ value }: { value: string }) => {
   customerModel.setData({ address: value });
   formOrderView.address = value;
 });
 
+// введение электронной почты
 events.on('email:chosen',  ({ value }: { value: string }) => {
   customerModel.setData({ email: value });
   formContactsView.email = value;
 });
 
+// введение номера телефона
 events.on('phone:chosen',  ({ value }: { value: string }) => {
   customerModel.setData({ phone: value });
   formContactsView.phone = value;
 });
 
-events.on('customer:updated', () => {
+// обновление данных при оформлении заказа
+events.on('customer:updated', (fields: Record<string, TPayment | string>) => {
+  // const value = Object.values(fields)[0];
+
+  // switch (Object.keys(fields)[0]) {
+  //   case 'payment':
+  //     formOrderView.paymentMethod = value as TPayment;
+  //     break;
+  //   case 'address':
+  //     formOrderView.address = value;
+  //     break;
+  //   case 'email':
+  //     formContactsView.email = value;
+  //     break;
+  //   case 'phone':
+  //     formContactsView.phone = value;
+  //     break;
+  // }
+
   const errors = customerModel.validateData();
 
   const { payment, address, phone, email } = errors;
@@ -193,6 +230,7 @@ events.on('customer:updated', () => {
   formContactsView.validate({ phone, email });
 });
 
+// нажатие кнопки "Далее" на первой странице оформления заказа
 events.on('order:submit', () => {
   modalView.render({
     content: formContactsView.render(),
@@ -200,6 +238,7 @@ events.on('order:submit', () => {
   });
 });
 
+// нажатие кнопки "Оплатить" на второй странице оформления заказа
 events.on('contacts:submit', () => {
   const contactsData = customerModel.getData();
  
@@ -221,8 +260,18 @@ events.on('contacts:submit', () => {
 
                cartModel.clearItems();
                customerModel.clearData();
-               formOrderView.reset();
-               formContactsView.reset();
+               formOrderView.render({
+                paymentMethod: '',
+                address: '',
+                errorMessage: '',
+                disableSubmitButton: true,
+               });
+               formContactsView.render({
+                email: '',
+                phone: '',
+                errorMessage: '',
+                disableSubmitButton: true,
+               });
              })
              .catch((error) => console.error('Ошибка при отправке заказа:', error.message));
 });
